@@ -16,6 +16,7 @@ const collFilmsPlans = process.env.MONGO_COLLECTION_FILMS_PLANS;
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.static("./public"));
 const PORT = 3000;
 
 app.get("/api/planets", async (req, res) => {
@@ -195,10 +196,7 @@ app.get("/api/planets/:id/characters", async (req, res) => {
     const client = await MongoClient.connect(url);
     const db = client.db(dbName);
     const collection = db.collection(collChars);
-    const result = await collection
-      .find({ homeworld: id })
-      .project({ _id: 0, id: 1, name: 1 })
-      .toArray();
+    const result = await collection.find({ homeworld: id }).toArray();
 
     if (result) {
       res.status(200).send(result);
